@@ -23,29 +23,34 @@ export async function onRequestPost(context) {
   }
 
   try {
-    /* ── Step 1: GPT-4o Vision으로 사람 분석 ── */
-    const visionRes = await fetch('https://api.openai.com/v1/chat/completions', {
+    /* ── Step 1: gpt-4.1-mini Responses API로 사람 분석 ── */
+    const visionRes = await fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o',
-        response_format: { type: 'json_object' },
-        max_tokens: 1500,
-        messages: [
+        model: 'gpt-4.1-mini',
+        input: [
           {
             role: 'system',
-            content:
-              '당신은 사람의 외모와 분위기를 분석해서 퍼스널 맞춤 차량을 추천하는 전문가입니다. 반드시 JSON으로만 응답합니다.',
+            content: [
+              {
+                type: 'input_text',
+                text: '당신은 사람의 외모와 분위기를 분석해서 퍼스널 맞춤 차량을 추천하는 전문가입니다. 반드시 JSON으로만 응답합니다.',
+              },
+            ],
           },
           {
             role: 'user',
             content: [
-              { type: 'image_url', image_url: { url: image } },
               {
-                type: 'text',
+                type: 'input_image',
+                image_url: image,
+              },
+              {
+                type: 'input_text',
                 text: `이 사람의 얼굴형, 인상, 스타일, 분위기를 분석해서 딱 맞는 차량 1종을 추천해주세요.
 반드시 아래 JSON 구조로만 응답하세요:
 {
@@ -63,6 +68,13 @@ export async function onRequestPost(context) {
             ],
           },
         ],
+        text: {
+          format: { type: 'json_object' },
+        },
+        temperature: 1,
+        max_output_tokens: 2048,
+        top_p: 1,
+        store: true,
       }),
     });
 
@@ -71,7 +83,15 @@ export async function onRequestPost(context) {
       throw new Error(visionData.error?.message || 'Vision API 오류');
     }
 
-    const rec = JSON.parse(visionData.choices[0].message.content);
+    // Responses API 출력 파싱: output[].content[].text
+    const outputText = visionData.output
+      ?.find(o => o.type === 'message')
+      ?.content?.find(c => c.type === 'output_text')
+      ?.text;
+
+    if (!outputText) throw new Error('응답 파싱 실패: ' + JSON.stringify(visionData));
+
+    const rec = JSON.parse(outputText);
 
     /* ── Step 2: DALL-E 3으로 차량 이미지 생성 ── */
     const dallePrompt =
