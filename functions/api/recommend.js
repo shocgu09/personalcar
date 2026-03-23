@@ -9,10 +9,13 @@ export async function onRequestOptions() {
 }
 
 export async function onRequestPost(context) {
-  const { OPENAI_API_KEY } = context.env;
+  const { OPENAI_API_KEY, PEXELS_API_KEY } = context.env;
 
   if (!OPENAI_API_KEY) {
     return json({ error: 'OPENAI_API_KEY가 설정되지 않았습니다.' }, 500);
+  }
+  if (!PEXELS_API_KEY) {
+    return json({ error: 'PEXELS_API_KEY가 설정되지 않았습니다.' }, 500);
   }
 
   let image;
@@ -62,7 +65,7 @@ export async function onRequestPost(context) {
   "personality": "이 사람의 분위기·이미지 분석 2~3문장",
   "reason": "이 차량을 추천하는 핵심 이유 2문장",
   "report": "상세 추천 보고서. 외모 분석 → 라이프스타일 유추 → 차량 매칭 근거 → 이 차량의 매력 포인트 순서로 5~6문장",
-  "dallePrompt": "DALL-E 3 영문 프롬프트: professional automotive studio photography of [차량명], dramatic lighting, luxury showroom, ultra realistic, 4K"
+  "pexelsQuery": "Pexels 이미지 검색용 영문 키워드 (예: BMW 3 Series sedan)"
 }`,
               },
             ],
@@ -83,7 +86,7 @@ export async function onRequestPost(context) {
       throw new Error(visionData.error?.message || 'Vision API 오류');
     }
 
-    // Responses API 출력 파싱: output[].content[].text
+    // Responses API 출력 파싱
     const outputText = visionData.output
       ?.find(o => o.type === 'message')
       ?.content?.find(c => c.type === 'output_text')
@@ -93,35 +96,28 @@ export async function onRequestPost(context) {
 
     const rec = JSON.parse(outputText);
 
-    /* ── Step 2: DALL-E 3으로 차량 이미지 생성 ── */
-    const dallePrompt =
-      rec.dallePrompt ||
-      `Professional studio automotive photography of ${rec.carName}, dramatic lighting, luxury showroom background, ultra realistic, 4K`;
+    /* ── Step 2: Pexels에서 차량 이미지 검색 ── */
+    const query = rec.pexelsQuery || rec.carName;
+    const pexelsRes = await fetch(
+      `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=5&orientation=landscape`,
+      {
+        headers: { Authorization: PEXELS_API_KEY },
+      }
+    );
 
-    const dalleRes = await fetch('https://api.openai.com/v1/images/generations', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'dall-e-3',
-        prompt: dallePrompt,
-        n: 1,
-        size: '1024x1024',
-        quality: 'standard',
-      }),
-    });
-
-    const dalleData = await dalleRes.json();
-    if (!dalleRes.ok) {
-      throw new Error(dalleData.error?.message || 'DALL-E API 오류');
+    const pexelsData = await pexelsRes.json();
+    if (!pexelsRes.ok) {
+      throw new Error(pexelsData.error || 'Pexels API 오류');
     }
 
-    return json({
-      ...rec,
-      carImageUrl: dalleData.data[0].url,
-    });
+    // 첫 번째 사진 사용, 없으면 폴백
+    const carImageUrl =
+      pexelsData.photos?.[0]?.src?.large2x ||
+      pexelsData.photos?.[0]?.src?.large ||
+      pexelsData.photos?.[0]?.src?.original ||
+      `https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=800`;
+
+    return json({ ...rec, carImageUrl });
   } catch (err) {
     return json({ error: err.message }, 500);
   }
