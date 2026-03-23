@@ -1,120 +1,106 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { useState, useRef, useCallback } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [image, setImage] = useState(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const fileInputRef = useRef(null)
+
+  const handleFile = (file) => {
+    if (!file || !file.type.startsWith('image/')) return
+    const reader = new FileReader()
+    reader.onload = (e) => setImage(e.target.result)
+    reader.readAsDataURL(file)
+  }
+
+  const handleDrop = useCallback((e) => {
+    e.preventDefault()
+    setIsDragging(false)
+    handleFile(e.dataTransfer.files[0])
+  }, [])
+
+  const handleDragOver = (e) => { e.preventDefault(); setIsDragging(true) }
+  const handleDragLeave = () => setIsDragging(false)
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+    <div className="app">
+      {/* 헤더 */}
+      <header className="header">
+        <div className="logo">🚗 CarFit</div>
+        <p className="logo-sub">AI 퍼스널 차 추천</p>
+      </header>
+
+      {/* 히어로 */}
+      <section className="hero">
+        <div className="badge">✨ AI 기반 분석</div>
+        <h1>
+          나에게 <span className="accent">딱 맞는 차</span>를<br />
+          찾아드립니다
+        </h1>
+        <p className="hero-desc">
+          본인 사진 한 장으로 얼굴형, 스타일, 분위기를 분석해<br />
+          퍼스널 맞춤 차량을 추천해드립니다.
+        </p>
+      </section>
+
+      {/* 업로드 영역 */}
+      <section className="upload-section">
+        <div
+          className={`upload-box ${isDragging ? 'dragging' : ''} ${image ? 'has-image' : ''}`}
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onClick={() => !image && fileInputRef.current.click()}
         >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+          {image ? (
+            <div className="preview-wrap">
+              <img src={image} alt="업로드된 사진" className="preview-img" />
+              <button
+                className="remove-btn"
+                onClick={(e) => { e.stopPropagation(); setImage(null) }}
+              >✕</button>
+            </div>
+          ) : (
+            <div className="upload-placeholder">
+              <div className="upload-icon">📷</div>
+              <p className="upload-title">사진을 드래그하거나 클릭해서 업로드</p>
+              <p className="upload-hint">JPG, PNG, WEBP · 최대 10MB</p>
+            </div>
+          )}
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          style={{ display: 'none' }}
+          onChange={(e) => handleFile(e.target.files[0])}
+        />
+
+        {/* 버튼 영역 */}
+        <div className="btn-group">
+          {image && (
+            <button className="btn-secondary" onClick={() => fileInputRef.current.click()}>
+              📁 다시 선택
+            </button>
+          )}
+          <button
+            className={`btn-primary ${!image ? 'disabled' : ''}`}
+            disabled={!image}
+          >
+            {image ? '🔍 차량 추천받기' : '사진을 먼저 업로드해주세요'}
+          </button>
+        </div>
+
+        {/* 안내 문구 */}
+        {!image && (
+          <div className="tips">
+            <div className="tip">💡 정면 사진일수록 정확도가 높아요</div>
+            <div className="tip">🔒 사진은 분석 후 즉시 삭제됩니다</div>
+          </div>
+        )}
+      </section>
+    </div>
   )
 }
 
