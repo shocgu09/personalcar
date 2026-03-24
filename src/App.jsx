@@ -89,6 +89,26 @@ export default function App() {
         backgroundColor: '#0a0a0f',
         scale: 2,
         useCORS: true,
+        onclone: async (clonedDoc) => {
+          const imgs = clonedDoc.querySelectorAll('.result-photo')
+          for (const img of imgs) {
+            const w = img.offsetWidth || 300
+            const h = img.offsetHeight || 240
+            const c = document.createElement('canvas')
+            c.width = w; c.height = h
+            const ctx = c.getContext('2d')
+            const image = new Image()
+            image.crossOrigin = 'anonymous'
+            await new Promise(resolve => { image.onload = resolve; image.src = img.src })
+            // object-fit: cover 직접 계산
+            const scale = Math.max(w / image.width, h / image.height)
+            const sw = w / scale, sh = h / scale
+            const sx = (image.width - sw) / 2, sy = (image.height - sh) / 2
+            ctx.drawImage(image, sx, sy, sw, sh, 0, 0, w, h)
+            c.style.cssText = img.style.cssText
+            img.replaceWith(c)
+          }
+        },
       })
       canvas.toBlob(async (blob) => {
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
