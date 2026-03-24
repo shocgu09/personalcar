@@ -125,7 +125,17 @@ body { background: var(--bg); color: var(--text);
 .report-heading { font-size: .88rem; font-weight: 700; color: var(--primary-l);
   margin-bottom: 12px; letter-spacing: .02em; }
 .report-text { font-size: .88rem; color: var(--text2); line-height: 1.8; }
-.retry-btn { width: 100%; margin-top: 4px; }
+.result-capture { background: var(--bg); padding-bottom: 8px; }
+.result-actions { display: flex; gap: 12px; margin-top: 4px; }
+.result-actions .btn-primary { flex: 1; }
+.btn-share {
+  flex: 1; padding: 14px 24px; border-radius: 12px; font-size: 1rem; font-weight: 700;
+  background: var(--bg3); color: var(--primary-l);
+  border: 1px solid var(--primary); cursor: pointer; transition: all .2s;
+}
+.btn-share:hover { background: rgba(124,111,247,.15); }
+.btn-share:disabled { opacity: .6; cursor: default; }
+.share-msg { text-align: center; color: var(--green); font-size: .88rem; margin-top: 10px; }
 
 /* ── 반응형 ── */
 @media (max-width: 600px) {

@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
+import html2canvas from 'html2canvas'
 import './App.css'
 
 /* 이미지 압축 (800px, JPEG 85%) */
@@ -32,6 +33,9 @@ export default function App() {
   const [error, setError] = useState(null)
   const [loadingStep, setLoadingStep] = useState(0)
   const fileInputRef = useRef(null)
+  const resultRef = useRef(null)
+  const [shareMsg, setShareMsg] = useState('')
+  const [sharing, setSharing] = useState(false)
 
   /* 파일 처리 */
   const handleFile = (file) => {
@@ -76,6 +80,37 @@ export default function App() {
   }
 
   const reset = () => { setStep('upload'); setImage(null); setResult(null); setError(null) }
+
+  const handleShare = async () => {
+    if (!resultRef.current || sharing) return
+    setSharing(true)
+    try {
+      const canvas = await html2canvas(resultRef.current, {
+        backgroundColor: '#0a0a0f',
+        scale: 2,
+        useCORS: true,
+      })
+      canvas.toBlob(async (blob) => {
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+        const file = new File([blob], 'carfit-result.png', { type: 'image/png' })
+        if (isMobile && navigator.canShare?.({ files: [file] })) {
+          await navigator.share({ files: [file] })
+        } else {
+          const url = URL.createObjectURL(blob)
+          const a = document.createElement('a')
+          a.href = url; a.download = 'carfit-result.png'; a.click()
+          URL.revokeObjectURL(url)
+          setShareMsg('이미지가 저장되었습니다!')
+          setTimeout(() => setShareMsg(''), 2500)
+        }
+      }, 'image/png')
+    } catch (e) {
+      setShareMsg('공유 중 오류가 발생했습니다.')
+      setTimeout(() => setShareMsg(''), 2500)
+    } finally {
+      setSharing(false)
+    }
+  }
 
   /* ── UPLOAD ── */
   if (step === 'upload') return (
@@ -170,6 +205,7 @@ export default function App() {
         <button className="reset-btn" onClick={reset}>← 다시 분석</button>
       </header>
 
+      <div ref={resultRef} className="result-capture">
       {/* 사진 비교 */}
       <section className="photos-section">
         <div className="photo-card">
@@ -211,10 +247,17 @@ export default function App() {
           <p className="report-text">{result.report}</p>
         </div>
       </section>
+      </div>
 
-      <button className="btn-primary retry-btn" onClick={reset}>
-        🔄 다른 사진으로 다시 분석하기
-      </button>
+      <div className="result-actions">
+        <button className="btn-primary retry-btn" onClick={reset}>
+          🔄 다시 분석하기
+        </button>
+        <button className="btn-share" onClick={handleShare} disabled={sharing}>
+          {sharing ? '⏳ 처리 중...' : '🖼 이미지 공유'}
+        </button>
+      </div>
+      {shareMsg && <p className="share-msg">{shareMsg}</p>}
     </div>
   )
 }
