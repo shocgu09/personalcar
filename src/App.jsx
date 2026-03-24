@@ -1,5 +1,7 @@
 import { useState, useRef, useCallback } from 'react'
 import html2canvas from 'html2canvas'
+import Cropper from 'cropperjs'
+import 'cropperjs/dist/cropper.css'
 import './App.css'
 
 /* 이미지 압축 (800px, JPEG 85%) */
@@ -40,11 +42,12 @@ export default function App() {
   const [sharing, setSharing] = useState(false)
   const [rawImage, setRawImage] = useState(null)
   const [showCrop, setShowCrop] = useState(false)
+  const [showConsent, setShowConsent] = useState(false)
 
-  /* img 로드 완료 후 Cropper.js 초기화 (CDN window.Cropper 사용) */
+  /* img 로드 완료 후 Cropper.js 초기화 */
   const initCropper = () => {
     if (cropperRef.current) { cropperRef.current.destroy(); cropperRef.current = null }
-    cropperRef.current = new window.Cropper(cropImgRef.current, {
+    cropperRef.current = new Cropper(cropImgRef.current, {
       aspectRatio: 3 / 4,
       viewMode: 1,
       dragMode: 'move',
@@ -75,6 +78,12 @@ export default function App() {
     e.preventDefault(); setIsDragging(false)
     handleFile(e.dataTransfer.files[0])
   }, [])
+
+  /* 동의 후 분석 실행 */
+  const handleConsentConfirm = () => {
+    setShowConsent(false)
+    handleAnalyze()
+  }
 
   /* 분석 요청 */
   const handleAnalyze = async () => {
@@ -158,6 +167,25 @@ export default function App() {
     }
   }
 
+  /* ── 개인정보 동의 모달 ── */
+  const consentModal = showConsent && (
+    <div className="consent-overlay" onClick={() => setShowConsent(false)}>
+      <div className="consent-modal" onClick={e => e.stopPropagation()}>
+        <h2 className="consent-title">🔒 개인정보 수집 및 이용 동의</h2>
+        <ul className="consent-list">
+          <li>업로드한 사진은 AI 분석을 위해 <strong>OpenAI 서버</strong>로 전송됩니다.</li>
+          <li>전송된 이미지는 분석 완료 후 <strong>당사 서버에 저장되지 않습니다.</strong></li>
+          <li>OpenAI의 데이터 처리 방침은 <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noreferrer">OpenAI 개인정보처리방침</a>을 참고하세요.</li>
+          <li>얼굴 사진 등 민감한 개인정보를 포함할 수 있으므로 신중히 동의해주세요.</li>
+        </ul>
+        <div className="consent-actions">
+          <button className="btn-outline-crop" onClick={() => setShowConsent(false)}>취소</button>
+          <button className="btn-primary-crop" onClick={handleConsentConfirm}>동의하고 분석 시작</button>
+        </div>
+      </div>
+    </div>
+  )
+
   /* ── CROP 화면 ── */
   if (showCrop) return (
     <div className="app">
@@ -181,6 +209,7 @@ export default function App() {
   /* ── UPLOAD ── */
   if (step === 'upload') return (
     <div className="app">
+      {consentModal}
       <header className="header">
         <div className="logo">🚗 CarFit</div>
         <p className="logo-sub">AI 퍼스널 차 추천</p>
@@ -229,7 +258,7 @@ export default function App() {
             </button>
           )}
           <button className={`btn-primary${!image ? ' disabled' : ''}`}
-            disabled={!image} onClick={handleAnalyze}>
+            disabled={!image} onClick={() => image && setShowConsent(true)}>
             {image ? '🔍 차량 추천받기' : '사진을 먼저 업로드해주세요'}
           </button>
         </div>

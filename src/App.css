@@ -167,3 +167,28 @@ body { background: var(--bg); color: var(--text);
   .report-section { grid-template-columns: 1fr; }
   .btn-group { flex-direction: column; }
 }
+
+/* ── 개인정보 동의 모달 ── */
+.consent-overlay {
+  position: fixed; inset: 0; z-index: 999;
+  background: rgba(0,0,0,.7); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+.consent-modal {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px 24px; max-width: 440px; width: 100%;
+}
+.consent-title { font-size: 1.1rem; font-weight: 800; color: var(--text); margin-bottom: 16px; }
+.consent-list {
+  list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px;
+}
+.consent-list li {
+  font-size: .86rem; color: var(--text2); line-height: 1.6;
+  padding-left: 14px; position: relative;
+}
+.consent-list li::before { content: '·'; position: absolute; left: 0; color: var(--primary-l); }
+.consent-list strong { color: var(--text); }
+.consent-list a { color: var(--primary-l); text-decoration: underline; }
+.consent-actions { display: flex; gap: 10px; }
+.consent-actions .btn-outline-crop,
+.consent-actions .btn-primary-crop { flex: 1; }
