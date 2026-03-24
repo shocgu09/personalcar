@@ -1,6 +1,6 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import html2canvas from 'html2canvas'
-import Cropper from 'react-cropper'
+import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 import './App.css'
 
@@ -36,11 +36,29 @@ export default function App() {
   const [loadingStep, setLoadingStep] = useState(0)
   const fileInputRef = useRef(null)
   const resultRef = useRef(null)
+  const cropImgRef = useRef(null)
   const cropperRef = useRef(null)
   const [shareMsg, setShareMsg] = useState('')
   const [sharing, setSharing] = useState(false)
   const [rawImage, setRawImage] = useState(null)
   const [showCrop, setShowCrop] = useState(false)
+
+  /* Cropper.js 직접 초기화 */
+  useEffect(() => {
+    if (!showCrop || !cropImgRef.current) return
+    if (cropperRef.current) { cropperRef.current.destroy(); cropperRef.current = null }
+    cropperRef.current = new Cropper(cropImgRef.current, {
+      aspectRatio: 4 / 3,
+      viewMode: 1,
+      dragMode: 'move',
+      cropBoxMovable: false,
+      cropBoxResizable: false,
+      autoCropArea: 1,
+      zoomable: true,
+      toggleDragModeOnDblclick: false,
+    })
+    return () => { cropperRef.current?.destroy(); cropperRef.current = null }
+  }, [showCrop, rawImage])
 
   /* 파일 처리 → crop 화면 열기 */
   const handleFile = (file) => {
@@ -52,9 +70,8 @@ export default function App() {
 
   /* crop 확정 */
   const applyCrop = () => {
-    const cropper = cropperRef.current?.cropper
-    if (!cropper) return
-    setImage(cropper.getCroppedCanvas({ maxWidth: 1200, maxHeight: 1200 }).toDataURL('image/jpeg', 0.9))
+    if (!cropperRef.current) return
+    setImage(cropperRef.current.getCroppedCanvas({ maxWidth: 1200, maxHeight: 1200 }).toDataURL('image/jpeg', 0.9))
     setShowCrop(false)
   }
 
@@ -155,25 +172,7 @@ export default function App() {
         <h2 className="crop-title">사진 영역 선택</h2>
         <p className="crop-desc">사진을 드래그·핀치해서 원하는 위치로 맞춰주세요</p>
         <div className="crop-wrap">
-          <Cropper
-            ref={cropperRef}
-            src={rawImage}
-            style={{ maxHeight: '60vh', width: '100%' }}
-            aspectRatio={4/3}
-            viewMode={1}
-            dragMode="move"
-            cropBoxMovable={false}
-            cropBoxResizable={false}
-            autoCropArea={1}
-            zoomable={true}
-            toggleDragModeOnDblclick={false}
-            onInitialized={(instance) => {
-              instance.setDragMode('move')
-              // 핸들 숨기기 (CSS로도 보완)
-              const box = instance.cropBox
-              if (box) box.style.cursor = 'default'
-            }}
-          />
+          <img ref={cropImgRef} src={rawImage} alt="crop" style={{ maxWidth: '100%', display: 'block' }} />
         </div>
         <div className="crop-actions">
           <button className="btn-outline-crop" onClick={() => setShowCrop(false)}>취소</button>
