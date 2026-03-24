@@ -1,7 +1,5 @@
 import { useState, useRef, useCallback } from 'react'
 import html2canvas from 'html2canvas'
-import Cropper from 'cropperjs'
-import 'cropperjs/dist/cropper.css'
 import './App.css'
 
 /* 이미지 압축 (800px, JPEG 85%) */
@@ -43,10 +41,10 @@ export default function App() {
   const [rawImage, setRawImage] = useState(null)
   const [showCrop, setShowCrop] = useState(false)
 
-  /* img 로드 완료 후 Cropper.js 초기화 */
+  /* img 로드 완료 후 Cropper.js 초기화 (CDN window.Cropper 사용) */
   const initCropper = () => {
     if (cropperRef.current) { cropperRef.current.destroy(); cropperRef.current = null }
-    cropperRef.current = new Cropper(cropImgRef.current, {
+    cropperRef.current = new window.Cropper(cropImgRef.current, {
       aspectRatio: 3 / 4,
       viewMode: 1,
       dragMode: 'move',
