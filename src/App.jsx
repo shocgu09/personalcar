@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import html2canvas from 'html2canvas'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
@@ -43,9 +43,8 @@ export default function App() {
   const [rawImage, setRawImage] = useState(null)
   const [showCrop, setShowCrop] = useState(false)
 
-  /* Cropper.js 직접 초기화 */
-  useEffect(() => {
-    if (!showCrop || !cropImgRef.current) return
+  /* img 로드 완료 후 Cropper.js 초기화 */
+  const initCropper = () => {
     if (cropperRef.current) { cropperRef.current.destroy(); cropperRef.current = null }
     cropperRef.current = new Cropper(cropImgRef.current, {
       aspectRatio: 3 / 4,
@@ -57,8 +56,7 @@ export default function App() {
       zoomable: true,
       toggleDragModeOnDblclick: false,
     })
-    return () => { cropperRef.current?.destroy(); cropperRef.current = null }
-  }, [showCrop, rawImage])
+  }
 
   /* 파일 처리 → crop 화면 열기 */
   const handleFile = (file) => {
@@ -172,7 +170,7 @@ export default function App() {
         <h2 className="crop-title">사진 영역 선택</h2>
         <p className="crop-desc">사진을 드래그·핀치해서 원하는 위치로 맞춰주세요</p>
         <div className="crop-wrap">
-          <img ref={cropImgRef} src={rawImage} alt="crop" style={{ maxWidth: '100%', display: 'block' }} />
+          <img ref={cropImgRef} src={rawImage} alt="crop" onLoad={initCropper} style={{ maxWidth: '100%', display: 'block' }} />
         </div>
         <div className="crop-actions">
           <button className="btn-outline-crop" onClick={() => setShowCrop(false)}>취소</button>
