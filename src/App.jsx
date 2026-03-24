@@ -1,5 +1,7 @@
 import { useState, useRef, useCallback } from 'react'
 import html2canvas from 'html2canvas'
+import ReactCrop, { centerCrop, makeAspectCrop } from 'react-image-crop'
+import 'react-image-crop/dist/ReactCrop.css'
 import './App.css'
 
 /* 이미지 압축 (800px, JPEG 85%) */
@@ -34,15 +36,46 @@ export default function App() {
   const [loadingStep, setLoadingStep] = useState(0)
   const fileInputRef = useRef(null)
   const resultRef = useRef(null)
+  const imgRef = useRef(null)
   const [shareMsg, setShareMsg] = useState('')
   const [sharing, setSharing] = useState(false)
+  const [rawImage, setRawImage] = useState(null)   // crop 전 원본
+  const [crop, setCrop] = useState()
+  const [completedCrop, setCompletedCrop] = useState()
+  const [showCrop, setShowCrop] = useState(false)
 
-  /* 파일 처리 */
+  /* 파일 처리 → crop 모달 열기 */
   const handleFile = (file) => {
     if (!file || !file.type.startsWith('image/')) return
     const reader = new FileReader()
-    reader.onload = (e) => setImage(e.target.result)
+    reader.onload = (e) => { setRawImage(e.target.result); setShowCrop(true) }
     reader.readAsDataURL(file)
+  }
+
+  /* crop 이미지 로드 시 초기 영역 설정 (정사각형 중앙) */
+  const onImageLoad = (e) => {
+    const { width, height } = e.currentTarget
+    const c = centerCrop(makeAspectCrop({ unit: '%', width: 80 }, 1, width, height), width, height)
+    setCrop(c)
+  }
+
+  /* crop 확정 → canvas에서 잘라낸 이미지 추출 */
+  const applyCrop = () => {
+    if (!completedCrop || !imgRef.current) return
+    const img = imgRef.current
+    const scaleX = img.naturalWidth / img.width
+    const scaleY = img.naturalHeight / img.height
+    const canvas = document.createElement('canvas')
+    canvas.width = completedCrop.width * scaleX
+    canvas.height = completedCrop.height * scaleY
+    canvas.getContext('2d').drawImage(
+      img,
+      completedCrop.x * scaleX, completedCrop.y * scaleY,
+      completedCrop.width * scaleX, completedCrop.height * scaleY,
+      0, 0, canvas.width, canvas.height
+    )
+    setImage(canvas.toDataURL('image/jpeg', 0.9))
+    setShowCrop(false)
   }
 
   const handleDrop = useCallback((e) => {
@@ -131,6 +164,34 @@ export default function App() {
       setSharing(false)
     }
   }
+
+  /* ── CROP 모달 ── */
+  if (showCrop) return (
+    <div className="app">
+      <header className="header">
+        <div className="logo">🚗 CarFit</div>
+      </header>
+      <section className="crop-section">
+        <h2 className="crop-title">사진 영역 선택</h2>
+        <p className="crop-desc">분석할 얼굴 영역을 선택해주세요</p>
+        <div className="crop-wrap">
+          <ReactCrop
+            crop={crop}
+            onChange={c => setCrop(c)}
+            onComplete={c => setCompletedCrop(c)}
+            aspect={1}
+            circularCrop={false}
+          >
+            <img ref={imgRef} src={rawImage} alt="crop" onLoad={onImageLoad} className="crop-img" />
+          </ReactCrop>
+        </div>
+        <div className="crop-actions">
+          <button className="btn-outline-crop" onClick={() => setShowCrop(false)}>취소</button>
+          <button className="btn-primary-crop" onClick={applyCrop}>✂️ 선택 완료</button>
+        </div>
+      </section>
+    </div>
+  )
 
   /* ── UPLOAD ── */
   if (step === 'upload') return (

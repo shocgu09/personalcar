@@ -125,6 +125,24 @@ body { background: var(--bg); color: var(--text);
 .report-heading { font-size: .88rem; font-weight: 700; color: var(--primary-l);
   margin-bottom: 12px; letter-spacing: .02em; }
 .report-text { font-size: .88rem; color: var(--text2); line-height: 1.8; }
+/* ── 크롭 ── */
+.crop-section { display: flex; flex-direction: column; align-items: center; gap: 16px; padding-top: 20px; }
+.crop-title { font-size: 1.4rem; font-weight: 800; }
+.crop-desc { color: var(--text2); font-size: .9rem; }
+.crop-wrap { width: 100%; max-width: 480px; border-radius: 16px; overflow: hidden; }
+.crop-img { max-width: 100%; max-height: 60vh; object-fit: contain; display: block; }
+.crop-actions { display: flex; gap: 12px; width: 100%; max-width: 480px; }
+.btn-outline-crop {
+  flex: 1; padding: 14px; border-radius: 12px; font-size: 1rem; font-weight: 600;
+  background: transparent; color: var(--text2); border: 1px solid var(--border); cursor: pointer;
+}
+.btn-outline-crop:hover { border-color: var(--primary); color: var(--text); }
+.btn-primary-crop {
+  flex: 2; padding: 14px; border-radius: 12px; font-size: 1rem; font-weight: 700;
+  background: var(--primary); color: #fff; border: none; cursor: pointer; transition: background .2s;
+}
+.btn-primary-crop:hover { background: var(--primary-l); }
+
 .result-capture { background: var(--bg); padding-bottom: 8px; }
 .result-actions { display: flex; gap: 12px; margin-top: 4px; }
 .result-actions .btn-primary { flex: 1; }
