@@ -48,7 +48,7 @@ export default function App() {
     if (!showCrop || !cropImgRef.current) return
     if (cropperRef.current) { cropperRef.current.destroy(); cropperRef.current = null }
     cropperRef.current = new Cropper(cropImgRef.current, {
-      aspectRatio: 4 / 3,
+      aspectRatio: 3 / 4,
       viewMode: 1,
       dragMode: 'move',
       cropBoxMovable: false,
