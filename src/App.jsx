@@ -167,6 +167,12 @@ export default function App() {
             autoCropArea={1}
             zoomable={true}
             toggleDragModeOnDblclick={false}
+            onInitialized={(instance) => {
+              instance.setDragMode('move')
+              // 핸들 숨기기 (CSS로도 보완)
+              const box = instance.cropBox
+              if (box) box.style.cursor = 'default'
+            }}
           />
         </div>
         <div className="crop-actions">

@@ -127,6 +127,9 @@ body { background: var(--bg); color: var(--text);
 .report-text { font-size: .88rem; color: var(--text2); line-height: 1.8; }
 /* ── 크롭 ── */
 .crop-section { display: flex; flex-direction: column; align-items: center; gap: 16px; padding-top: 20px; }
+/* 크롭 박스 핸들 고정 (리사이즈 비활성화) */
+.cropper-point, .cropper-dashed { display: none !important; }
+.cropper-view-box { cursor: default !important; }
 .crop-title { font-size: 1.4rem; font-weight: 800; }
 .crop-desc { color: var(--text2); font-size: .9rem; }
 .crop-wrap { width: 100%; max-width: 480px; border-radius: 16px; overflow: hidden; }
