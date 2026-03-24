@@ -159,7 +159,7 @@ export default function App() {
             ref={cropperRef}
             src={rawImage}
             style={{ maxHeight: '60vh', width: '100%' }}
-            aspectRatio={1}
+            aspectRatio={4/3}
             viewMode={1}
             dragMode="move"
             cropBoxMovable={false}
