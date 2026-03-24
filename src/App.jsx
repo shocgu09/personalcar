@@ -6,7 +6,7 @@ import './App.css'
 
 /* 이미지 압축 (800px, JPEG 85%) */
 function compressImage(dataUrl, maxPx = 800) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const img = new Image()
     img.onload = () => {
       const ratio = Math.min(maxPx / img.width, maxPx / img.height, 1)
@@ -16,6 +16,7 @@ function compressImage(dataUrl, maxPx = 800) {
       canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height)
       resolve(canvas.toDataURL('image/jpeg', 0.85))
     }
+    img.onerror = () => reject(new Error('이미지 로드에 실패했습니다. 다시 시도해주세요.'))
     img.src = dataUrl
   })
 }
