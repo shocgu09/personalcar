@@ -1,0 +1,5 @@
+# CarFit - robots.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://dt-1js.pages.dev/sitemap.xml
