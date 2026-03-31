@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://dt-1js.pages.dev/sitemap.xml
+Sitemap: https://personalcar.pages.dev/sitemap.xml
