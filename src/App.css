@@ -5,8 +5,8 @@
   --bg2:      #13131a;
   --bg3:      #1c1c26;
   --border:   #2a2a38;
-  --primary:  #7c6ff7;
-  --primary-l:#a99ff9;
+  --primary:  #d97706;
+  --primary-l:#f59e0b;
   --text:     #e2e2ee;
   --text2:    #8888a8;
   --text3:    #55556a;
@@ -14,7 +14,7 @@
 }
 
 body { background: var(--bg); color: var(--text);
-  font-family: 'Segoe UI', 'Apple SD Gothic Neo', sans-serif; min-height: 100vh; }
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif; min-height: 100vh; }
 #root { width: 100%; border: none; text-align: left; }
 
 .app { max-width: 720px; margin: 0 auto; padding: 0 24px 80px; }
@@ -22,7 +22,7 @@ body { background: var(--bg); color: var(--text);
 /* ── 헤더 ── */
 .header { display: flex; align-items: center; gap: 10px;
   padding: 28px 0 0; margin-bottom: 48px; }
-.logo { font-size: 1.4rem; font-weight: 800; color: var(--primary-l); letter-spacing: -.5px; flex: 1; }
+.logo { font-size: 1.4rem; font-weight: 800; color: var(--primary-l); letter-spacing: -.5px; flex: 1; font-family: 'Space Grotesk', sans-serif; }
 .logo-sub { font-size: .8rem; color: var(--text3); }
 .reset-btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text2);
   padding: 8px 16px; border-radius: 8px; font-size: .85rem; cursor: pointer; transition: all .2s; }
@@ -30,9 +30,9 @@ body { background: var(--bg); color: var(--text);
 
 /* ── 히어로 ── */
 .hero { text-align: center; margin-bottom: 44px; }
-.badge { display: inline-block; background: rgba(124,111,247,.18); color: var(--primary-l);
+.badge { display: inline-block; background: rgba(217,119,6,.18); color: var(--primary-l);
   font-size: .78rem; font-weight: 600; padding: 5px 14px; border-radius: 20px;
-  border: 1px solid rgba(124,111,247,.35); margin-bottom: 20px; }
+  border: 1px solid rgba(217,119,6,.35); margin-bottom: 20px; }
 .hero h1 { font-size: 2.5rem; font-weight: 800; line-height: 1.2; margin-bottom: 16px;
   color: var(--text); letter-spacing: -.5px; }
 .accent { color: var(--primary-l); }
@@ -46,8 +46,8 @@ body { background: var(--bg); color: var(--text);
   border-radius: var(--radius); background: var(--bg2);
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; transition: all .2s; position: relative; overflow: hidden; }
-.upload-box:hover { border-color: var(--primary); background: rgba(124,111,247,.06); }
-.upload-box.dragging { border-color: var(--primary-l); background: rgba(124,111,247,.12); transform: scale(1.01); }
+.upload-box:hover { border-color: var(--primary); background: rgba(217,119,6,.06); }
+.upload-box.dragging { border-color: var(--primary-l); background: rgba(217,119,6,.12); transform: scale(1.01); }
 .upload-box.has-image { border-style: solid; border-color: var(--border); cursor: default; min-height: unset; }
 .upload-placeholder { display: flex; flex-direction: column; align-items: center;
   gap: 10px; padding: 40px; pointer-events: none; }
@@ -68,7 +68,7 @@ body { background: var(--bg); color: var(--text);
   font-size: .93rem; font-weight: 700; cursor: pointer; border: none; transition: all .2s; }
 .btn-primary { background: var(--primary); color: #fff; }
 .btn-primary:hover:not(.disabled) { background: var(--primary-l); transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(124,111,247,.4); }
+  box-shadow: 0 8px 24px rgba(217,119,6,.4); }
 .btn-primary.disabled { background: var(--bg3); color: var(--text3); cursor: not-allowed; }
 .btn-secondary { background: var(--bg3); color: var(--text2);
   border: 1px solid var(--border); flex: 0 0 auto; }
@@ -89,7 +89,7 @@ body { background: var(--bg); color: var(--text);
   border-radius: 10px; background: var(--bg2); border: 1px solid var(--border);
   opacity: .35; transition: all .4s; font-size: .88rem; color: var(--text2); }
 .loading-step.active { opacity: 1; border-color: var(--primary); color: var(--text);
-  background: rgba(124,111,247,.08); }
+  background: rgba(217,119,6,.08); }
 .loading-step.done { opacity: .7; }
 .step-icon { font-size: 1.1rem; width: 22px; text-align: center; }
 .loading-hint { font-size: .8rem; color: var(--text3); }
@@ -107,9 +107,9 @@ body { background: var(--bg); color: var(--text);
 
 /* ── 결과: 차량 타이틀 ── */
 .car-title-section { text-align: center; margin-bottom: 36px; }
-.car-badge { display: inline-block; background: rgba(124,111,247,.18); color: var(--primary-l);
+.car-badge { display: inline-block; background: rgba(217,119,6,.18); color: var(--primary-l);
   font-size: .78rem; font-weight: 700; padding: 4px 14px; border-radius: 20px;
-  border: 1px solid rgba(124,111,247,.35); margin-bottom: 14px; letter-spacing: .04em; }
+  border: 1px solid rgba(217,119,6,.35); margin-bottom: 14px; letter-spacing: .04em; }
 .car-name { font-size: 2.2rem; font-weight: 800; color: var(--text); margin-bottom: 6px; letter-spacing: -.5px; }
 .car-name-en { font-size: 1rem; color: var(--text3); margin-bottom: 16px; }
 .car-tags { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
@@ -154,7 +154,7 @@ body { background: var(--bg); color: var(--text);
   background: var(--bg3); color: var(--primary-l);
   border: 1px solid var(--primary); cursor: pointer; transition: all .2s;
 }
-.btn-share:hover { background: rgba(124,111,247,.15); }
+.btn-share:hover { background: rgba(217,119,6,.15); }
 .btn-share:disabled { opacity: .6; cursor: default; }
 .share-msg { text-align: center; color: var(--green); font-size: .88rem; margin-top: 10px; }
 
