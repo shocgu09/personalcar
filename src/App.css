@@ -1,16 +1,17 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:       #0a0a0f;
-  --bg2:      #13131a;
-  --bg3:      #1c1c26;
-  --border:   #2a2a38;
+  --bg:       #0a0a0e;
+  --bg2:      #111118;
+  --bg3:      #1a1a24;
+  --border:   #3a3a4a;
   --primary:  #d97706;
   --primary-l:#f59e0b;
-  --text:     #e2e2ee;
-  --text2:    #8888a8;
-  --text3:    #55556a;
-  --radius:   16px;
+  --green:    #4ade80;
+  --text:     #f0f0f5;
+  --text2:    #9898b0;
+  --text3:    #6a6a84;
+  --radius:   0;
 }
 
 body { background: var(--bg); color: var(--text);
@@ -25,13 +26,13 @@ body { background: var(--bg); color: var(--text);
 .logo { font-size: 1.4rem; font-weight: 800; color: var(--primary-l); letter-spacing: -.5px; flex: 1; font-family: 'Space Grotesk', sans-serif; }
 .logo-sub { font-size: .8rem; color: var(--text3); }
 .reset-btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text2);
-  padding: 8px 16px; border-radius: 8px; font-size: .85rem; cursor: pointer; transition: all .2s; }
+  padding: 8px 16px; border-radius: 0; font-size: .85rem; cursor: pointer; transition: all .2s; }
 .reset-btn:hover { color: var(--text); border-color: var(--primary); }
 
 /* ── 히어로 ── */
 .hero { text-align: center; margin-bottom: 44px; }
 .badge { display: inline-block; background: rgba(217,119,6,.18); color: var(--primary-l);
-  font-size: .78rem; font-weight: 600; padding: 5px 14px; border-radius: 20px;
+  font-size: .78rem; font-weight: 600; padding: 5px 14px; border-radius: 0;
   border: 1px solid rgba(217,119,6,.35); margin-bottom: 20px; }
 .hero h1 { font-size: 2.5rem; font-weight: 800; line-height: 1.2; margin-bottom: 16px;
   color: var(--text); letter-spacing: -.5px; }
@@ -40,8 +41,8 @@ body { background: var(--bg); color: var(--text);
 
 /* ── 업로드 ── */
 .upload-section { display: flex; flex-direction: column; align-items: center; gap: 18px; }
-.error-box { width: 100%; background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.3);
-  color: #fca5a5; border-radius: 10px; padding: 12px 16px; font-size: .88rem; }
+.error-box { width: 100%; background: rgba(255,107,107,.12); border: 1px solid rgba(255,107,107,.3);
+  color: #ff6b6b; border-radius: 0; padding: 12px 16px; font-size: .88rem; }
 .upload-box { width: 100%; min-height: 280px; border: 2px dashed var(--border);
   border-radius: var(--radius); background: var(--bg2);
   display: flex; align-items: center; justify-content: center;
@@ -55,16 +56,16 @@ body { background: var(--bg); color: var(--text);
 .upload-title { font-size: .98rem; font-weight: 600; color: var(--text); }
 .upload-hint { font-size: .8rem; color: var(--text3); }
 .preview-wrap { width: 100%; position: relative; }
-.preview-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; border-radius: 8px; }
+.preview-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; border-radius: 0; }
 .remove-btn { position: absolute; top: 12px; right: 12px; width: 30px; height: 30px;
-  border-radius: 50%; background: rgba(0,0,0,.65); border: 1px solid rgba(255,255,255,.15);
+  border-radius: 0; background: rgba(0,0,0,.65); border: 1px solid rgba(255,255,255,.15);
   color: #fff; font-size: .8rem; cursor: pointer;
   display: flex; align-items: center; justify-content: center; transition: background .2s; }
-.remove-btn:hover { background: rgba(239,68,68,.8); }
+.remove-btn:hover { background: rgba(255,107,107,.8); }
 
 /* ── 버튼 ── */
 .btn-group { display: flex; gap: 10px; width: 100%; }
-.btn-primary, .btn-secondary { flex: 1; padding: 14px 20px; border-radius: 12px;
+.btn-primary, .btn-secondary { flex: 1; padding: 14px 20px; border-radius: 0;
   font-size: .93rem; font-weight: 700; cursor: pointer; border: none; transition: all .2s; }
 .btn-primary { background: var(--primary); color: #fff; }
 .btn-primary:hover:not(.disabled) { background: var(--primary-l); transform: translateY(-1px);
@@ -74,7 +75,7 @@ body { background: var(--bg); color: var(--text);
   border: 1px solid var(--border); flex: 0 0 auto; }
 .btn-secondary:hover { background: var(--border); color: var(--text); }
 .tips { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; width: 100%; }
-.tip { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+.tip { background: var(--bg2); border: 1px solid var(--border); border-radius: 0;
   padding: 9px 14px; font-size: .8rem; color: var(--text2); }
 
 /* ── 로딩 ── */
@@ -86,7 +87,7 @@ body { background: var(--bg); color: var(--text);
 .loading-title { font-size: 1.4rem; font-weight: 700; color: var(--text); }
 .loading-steps { display: flex; flex-direction: column; gap: 10px; min-width: 260px; }
 .loading-step { display: flex; align-items: center; gap: 12px; padding: 10px 16px;
-  border-radius: 10px; background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 0; background: var(--bg2); border: 1px solid var(--border);
   opacity: .35; transition: all .4s; font-size: .88rem; color: var(--text2); }
 .loading-step.active { opacity: 1; border-color: var(--primary); color: var(--text);
   background: rgba(217,119,6,.08); }
@@ -102,19 +103,19 @@ body { background: var(--bg); color: var(--text);
 .photo-label { font-size: .78rem; font-weight: 600; color: var(--text2);
   text-align: center; letter-spacing: .04em; text-transform: uppercase; }
 .result-photo { width: 100%; aspect-ratio: 3/4; object-fit: cover;
-  border-radius: 14px; border: 2px solid var(--border); display: block; }
+  border-radius: 0; border: 2px solid var(--border); display: block; }
 .photo-arrow { font-size: 1.8rem; color: var(--primary-l); font-weight: 700; }
 
 /* ── 결과: 차량 타이틀 ── */
 .car-title-section { text-align: center; margin-bottom: 36px; }
 .car-badge { display: inline-block; background: rgba(217,119,6,.18); color: var(--primary-l);
-  font-size: .78rem; font-weight: 700; padding: 4px 14px; border-radius: 20px;
+  font-size: .78rem; font-weight: 700; padding: 4px 14px; border-radius: 0;
   border: 1px solid rgba(217,119,6,.35); margin-bottom: 14px; letter-spacing: .04em; }
 .car-name { font-size: 2.2rem; font-weight: 800; color: var(--text); margin-bottom: 6px; letter-spacing: -.5px; }
 .car-name-en { font-size: 1rem; color: var(--text3); margin-bottom: 16px; }
 .car-tags { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
 .car-tag { background: var(--bg3); border: 1px solid var(--border); color: var(--text2);
-  padding: 4px 12px; border-radius: 20px; font-size: .8rem; }
+  padding: 4px 12px; border-radius: 0; font-size: .8rem; }
 .car-price { font-size: .9rem; color: var(--primary-l); font-weight: 600; }
 
 /* ── 결과: 보고서 ── */
@@ -132,16 +133,16 @@ body { background: var(--bg); color: var(--text);
 .cropper-view-box { cursor: default !important; }
 .crop-title { font-size: 1.4rem; font-weight: 800; }
 .crop-desc { color: var(--text2); font-size: .9rem; }
-.crop-wrap { width: 100%; max-width: 480px; border-radius: 16px; overflow: hidden; }
+.crop-wrap { width: 100%; max-width: 480px; border-radius: 0; overflow: hidden; }
 .crop-img { max-width: 100%; max-height: 60vh; object-fit: contain; display: block; }
 .crop-actions { display: flex; gap: 12px; width: 100%; max-width: 480px; }
 .btn-outline-crop {
-  flex: 1; padding: 14px; border-radius: 12px; font-size: 1rem; font-weight: 600;
+  flex: 1; padding: 14px; border-radius: 0; font-size: 1rem; font-weight: 600;
   background: transparent; color: var(--text2); border: 1px solid var(--border); cursor: pointer;
 }
 .btn-outline-crop:hover { border-color: var(--primary); color: var(--text); }
 .btn-primary-crop {
-  flex: 2; padding: 14px; border-radius: 12px; font-size: 1rem; font-weight: 700;
+  flex: 2; padding: 14px; border-radius: 0; font-size: 1rem; font-weight: 700;
   background: var(--primary); color: #fff; border: none; cursor: pointer; transition: background .2s;
 }
 .btn-primary-crop:hover { background: var(--primary-l); }
@@ -150,7 +151,7 @@ body { background: var(--bg); color: var(--text);
 .result-actions { display: flex; gap: 12px; margin-top: 4px; }
 .result-actions .btn-primary { flex: 1; }
 .btn-share {
-  flex: 1; padding: 14px 24px; border-radius: 12px; font-size: 1rem; font-weight: 700;
+  flex: 1; padding: 14px 24px; border-radius: 0; font-size: 1rem; font-weight: 700;
   background: var(--bg3); color: var(--primary-l);
   border: 1px solid var(--primary); cursor: pointer; transition: all .2s;
 }

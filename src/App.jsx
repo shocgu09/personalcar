@@ -122,7 +122,7 @@ export default function App() {
     setSharing(true)
     try {
       const canvas = await html2canvas(resultRef.current, {
-        backgroundColor: '#0a0a0f',
+        backgroundColor: '#0a0a0e',
         scale: 2,
         useCORS: true,
         onclone: async (clonedDoc) => {
