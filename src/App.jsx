@@ -3,6 +3,8 @@ import html2canvas from 'html2canvas'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.css'
 import './App.css'
+import { useAuthUser, authHeader, logout } from './auth.js'
+import LoginGate from './LoginGate.jsx'
 
 /* 이미지 압축 (800px, JPEG 85%) */
 function compressImage(dataUrl, maxPx = 800) {
@@ -29,6 +31,7 @@ const LOADING_STEPS = [
 ]
 
 export default function App() {
+  const user = useAuthUser()
   const [step, setStep] = useState('upload')   // upload | loading | result
   const [image, setImage] = useState(null)
   const [isDragging, setIsDragging] = useState(false)
@@ -100,7 +103,7 @@ export default function App() {
       const compressed = await compressImage(image)
       const res = await fetch('/api/recommend', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(await authHeader()) },
         body: JSON.stringify({ image: compressed }),
       })
       const data = await res.json()
@@ -214,6 +217,7 @@ export default function App() {
       <header className="header">
         <div className="logo">🚗 CarFit</div>
         <p className="logo-sub">AI 퍼스널 차 추천</p>
+        {user && <button type="button" className="logout-btn" onClick={logout}>로그아웃</button>}
       </header>
 
       <section className="hero">
@@ -225,6 +229,9 @@ export default function App() {
         </p>
       </section>
 
+      {user === undefined ? null : !user || !user.emailVerified ? (
+        <LoginGate user={user} title="로그인하고 차 추천받기" />
+      ) : (
       <section className="upload-section">
         {error && <div className="error-box">⚠️ {error}</div>}
 
@@ -271,6 +278,7 @@ export default function App() {
           </div>
         )}
       </section>
+      )}
     </div>
   )
 
