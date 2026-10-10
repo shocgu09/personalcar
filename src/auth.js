@@ -41,7 +41,7 @@ export function useAuthUser() {
 /** 서버 호출용 Authorization 헤더 */
 export async function authHeader() {
   const u = auth.currentUser
-  if (!u) throw new Error('DT Club 회원 로그인이 필요합니다.')
+  if (!u) throw new Error('DT Club 회원 로그인이 필요해요.')
   return { Authorization: 'Bearer ' + (await u.getIdToken()) }
 }
 

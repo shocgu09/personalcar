@@ -18,7 +18,7 @@ function compressImage(dataUrl, maxPx = 800) {
       canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height)
       resolve(canvas.toDataURL('image/jpeg', 0.85))
     }
-    img.onerror = () => reject(new Error('이미지 로드에 실패했습니다. 다시 시도해주세요.'))
+    img.onerror = () => reject(new Error('이미지를 불러오지 못했어요. 다시 시도해 주세요.'))
     img.src = dataUrl
   })
 }
@@ -107,7 +107,7 @@ export default function App() {
         body: JSON.stringify({ image: compressed }),
       })
       const data = await res.json()
-      if (!res.ok || data.error) throw new Error(data.error || '분석 실패')
+      if (!res.ok || data.error) throw new Error(data.error || '분석하지 못했어요.')
       setResult(data)
       setStep('result')
     } catch (err) {
@@ -159,12 +159,12 @@ export default function App() {
           const a = document.createElement('a')
           a.href = url; a.download = 'carfit-result.png'; a.click()
           URL.revokeObjectURL(url)
-          setShareMsg('이미지가 저장되었습니다!')
+          setShareMsg('이미지를 저장했어요!')
           setTimeout(() => setShareMsg(''), 2500)
         }
       }, 'image/png')
     } catch (e) {
-      setShareMsg('공유 중 오류가 발생했습니다.')
+      setShareMsg('공유 중 오류가 생겼어요.')
       setTimeout(() => setShareMsg(''), 2500)
     } finally {
       setSharing(false)
@@ -177,13 +177,13 @@ export default function App() {
       <div className="consent-modal" onClick={e => e.stopPropagation()}>
         <h2 className="consent-title">🔒 개인정보 수집 및 이용 동의</h2>
         <ul className="consent-list">
-          <li>업로드한 사진은 AI 분석을 위해 <strong>OpenAI 서버</strong>로 전송됩니다.</li>
-          <li>전송된 이미지는 분석 완료 후 <strong>당사 서버에 저장되지 않습니다.</strong></li>
+          <li>업로드한 사진은 AI 분석을 위해 <strong>OpenAI 서버</strong>로 전송돼요.</li>
+          <li>전송된 이미지는 분석 완료 후 <strong>당사 서버에 저장되지 않아요.</strong></li>
           <li>OpenAI의 데이터 처리 방침은 <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noreferrer">OpenAI 개인정보처리방침</a>을 참고하세요.</li>
-          <li>얼굴 사진 등 민감한 개인정보를 포함할 수 있으므로 신중히 동의해주세요.</li>
+          <li>얼굴 사진 등 민감한 개인정보를 포함할 수 있으므로 신중히 동의해 주세요.</li>
         </ul>
         <div className="consent-actions">
-          <button className="btn-outline-crop" onClick={() => setShowConsent(false)}>취소</button>
+          <button className="btn-outline-crop" onClick={() => setShowConsent(false)}>닫기</button>
           <button className="btn-primary-crop" onClick={handleConsentConfirm}>동의하고 분석 시작</button>
         </div>
       </div>
@@ -198,7 +198,7 @@ export default function App() {
       </header>
       <section className="crop-section">
         <h2 className="crop-title">사진 영역 선택</h2>
-        <p className="crop-desc">사진을 드래그·핀치해서 원하는 위치로 맞춰주세요</p>
+        <p className="crop-desc">사진을 드래그·핀치해서 원하는 위치로 맞춰 주세요</p>
         <div className="crop-wrap">
           <img ref={cropImgRef} src={rawImage} alt="crop" onLoad={initCropper} style={{ maxWidth: '100%', display: 'block' }} />
         </div>
@@ -222,10 +222,10 @@ export default function App() {
 
       <section className="hero">
         <div className="badge">✨ AI 기반 분석</div>
-        <h1>나에게 <span className="accent">딱 맞는 차</span>를<br />찾아드립니다</h1>
+        <h1>나에게 <span className="accent">딱 맞는 차</span>를<br />찾아 드려요</h1>
         <p className="hero-desc">
           본인 사진 한 장으로 얼굴형, 스타일, 분위기를 분석해<br />
-          퍼스널 맞춤 차량을 추천해드립니다.
+          퍼스널 맞춤 차량을 추천해 드려요.
         </p>
       </section>
 
@@ -267,14 +267,14 @@ export default function App() {
           )}
           <button className={`btn-primary${!image ? ' disabled' : ''}`}
             disabled={!image} onClick={() => image && setShowConsent(true)}>
-            {image ? '🔍 차량 추천받기' : '사진을 먼저 업로드해주세요'}
+            {image ? '🔍 차량 추천받기' : '사진을 먼저 업로드해 주세요'}
           </button>
         </div>
 
         {!image && (
           <div className="tips">
             <div className="tip">💡 정면 사진일수록 정확도가 높아요</div>
-            <div className="tip">🔒 사진은 분석 후 즉시 삭제됩니다</div>
+            <div className="tip">🔒 사진은 분석 후 바로 삭제돼요</div>
           </div>
         )}
       </section>
@@ -287,7 +287,7 @@ export default function App() {
     <div className="app loading-app">
       <div className="loading-wrap">
         <div className="loading-spinner" />
-        <h2 className="loading-title">분석 중입니다</h2>
+        <h2 className="loading-title">분석하고 있어요</h2>
         <div className="loading-steps">
           {LOADING_STEPS.map((s, i) => (
             <div key={i} className={`loading-step${i <= loadingStep ? ' active' : ''}${i < loadingStep ? ' done' : ''}`}>
@@ -296,7 +296,7 @@ export default function App() {
             </div>
           ))}
         </div>
-        <p className="loading-hint">약 20~30초 소요됩니다</p>
+        <p className="loading-hint">20~30초쯤 걸려요</p>
       </div>
     </div>
   )
